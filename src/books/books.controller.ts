@@ -20,37 +20,57 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard) 
+  @UseGuards(JwtAuthGuard)
   @ApiBody({ type: CreateBookDto })
-  create(@Body() createBookDto: CreateBookDto) {
-    return this.booksService.create(createBookDto);
+  async create(@Body() createBookDto: CreateBookDto) {
+    try {
+      return await this.booksService.create(createBookDto);
+    } catch (error) {
+      throw new Error("Failed to create book");
+    }
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard) 
-  findAll() {
-    return this.booksService.findAll();
+  @UseGuards(JwtAuthGuard)
+  async findAll() {
+    try {
+      return await this.booksService.findAll();
+    } catch (error) {
+      throw new Error("Failed to fetch books");
+    }
   }
 
   @Get(":id")
   @UseGuards(JwtAuthGuard)
   @ApiParam({ name: "id", description: "ID of the book" })
-  findOne(@Param("id") id: string) {
-    return this.booksService.findOne(+id);
+  async findOne(@Param("id") id: string) {
+    try {
+      return await this.booksService.findOne(+id);
+    } catch (error) {
+      throw new Error("Failed to find book");
+    }
   }
 
   @Patch(":id")
-  @UseGuards(JwtAuthGuard) 
+  @UseGuards(JwtAuthGuard)
   @ApiParam({ name: "id", description: "ID of the book" })
   @ApiBody({ type: UpdateBookDto })
-  update(@Param("id") id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.booksService.update(+id, updateBookDto);
+  async update(@Param("id") id: string, @Body() updateBookDto: UpdateBookDto) {
+    try {
+      return await this.booksService.update(+id, updateBookDto);
+    } catch (error) {
+      throw new Error("Failed to update book");
+    }
   }
 
   @Delete(":id")
-  @UseGuards(JwtAuthGuard) 
+  @UseGuards(JwtAuthGuard)
   @ApiParam({ name: "id", description: "ID of the book" })
-  remove(@Param("id") id: string) {
-    return this.booksService.remove(+id);
+  async remove(@Param("id") id: string) {
+    try {
+      return await this.booksService.remove(+id);
+    } catch (error) {
+      throw new Error("Failed to delete book");
+    }
   }
 }

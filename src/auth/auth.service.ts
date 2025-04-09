@@ -11,33 +11,45 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email);
-    if (!user) {
-      return null;
-    }
+    try {
+      const user = await this.usersService.findByEmail(email);
+      if (!user) {
+        throw new Error("User not found");
+      }
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-      return null;
-    }
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        throw new Error("Invalid password");
+      }
 
-    return user;
+      return user;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async login(user: any) {
-    const payload = { sub: user.id, email: user.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    try {
+      const payload = { sub: user.id, email: user.email };
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
   async register(registerDto: any) {
-    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-    const user = await this.usersService.create({
-      email: registerDto.email,
-      password: hashedPassword,
-    });
+    try {
+      const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+      const user = await this.usersService.create({
+        email: registerDto.email,
+        password: hashedPassword,
+      });
 
-    return this.login(user);
+      return await this.login(user);
+    } catch (error) {
+      throw error;
+    }
   }
 }

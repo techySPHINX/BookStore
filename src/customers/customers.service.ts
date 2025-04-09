@@ -6,22 +6,42 @@ export class CustomersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: any) {
-    return this.prisma.customer.create({ data });
+    try {
+      return await this.prisma.customer.create({ data });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findAll() {
-    return this.prisma.customer.findMany();
+    try {
+      return await this.prisma.customer.findMany();
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findOne(id: number) {
-    return this.prisma.customer.findUnique({ where: { id } });
+    try {
+      return await this.prisma.customer.findUnique({ where: { id } });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(id: number, data: any) {
-    return this.prisma.customer.update({ where: { id }, data });
+    try {
+      return await this.prisma.customer.update({ where: { id }, data });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async remove(id: number) {
-    return this.prisma.customer.delete({ where: { id } });
+    try {
+      return await this.prisma.customer.delete({ where: { id } });
+    } catch (error) {
+      throw error;
+    }
   }
 }

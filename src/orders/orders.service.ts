@@ -6,61 +6,85 @@ export class OrdersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createOrderDto: any) {
-    return this.prisma.order.create({
-      data: {
-        customerId: createOrderDto.customerId,
-        books: {
-          create: createOrderDto.bookIds.map((bookId: number) => ({
-            book: {
-              connect: {
-                id: bookId,
+    try {
+      return await this.prisma.order.create({
+        data: {
+          customerId: createOrderDto.customerId,
+          books: {
+            create: createOrderDto.bookIds.map((bookId: number) => ({
+              book: {
+                connect: {
+                  id: bookId,
+                },
               },
-            },
-          })),
+            })),
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findAll() {
-    return this.prisma.order.findMany({
-      include: {
-        customer: true,
-        books: {
-          include: {
-            book: true,
+    try {
+      return await this.prisma.order.findMany({
+        include: {
+          customer: true,
+          books: {
+            include: {
+              book: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findOne(id: number) {
-    return this.prisma.order.findUnique({
-      where: { id },
-      include: {
-        customer: true,
-        books: {
-          include: {
-            book: true,
+    try {
+      return await this.prisma.order.findUnique({
+        where: { id },
+        include: {
+          customer: true,
+          books: {
+            include: {
+              book: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(id: number, data: any) {
-    return this.prisma.order.update({ where: { id }, data });
+    try {
+      return await this.prisma.order.update({ where: { id }, data });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async remove(id: number) {
-    return this.prisma.order.delete({ where: { id } });
+    try {
+      return await this.prisma.order.delete({ where: { id } });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async cancelOrder(id: number) {
-    return this.prisma.order.update({
-      where: { id },
-      data: { status: "CANCELLED" },
-    });
+    try {
+      return await this.prisma.order.update({
+        where: { id },
+        data: { status: "CANCELLED" },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 }

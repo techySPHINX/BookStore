@@ -8,7 +8,7 @@ async function bootstrap() {
   // Swagger Configuration
   const config = new DocumentBuilder()
     .setTitle("Bookstore API")
-    .setDescription("API documentation for the Bookstore application")
+    .setDescription("API documentation for the Bookstore application using NestJS")
     .setVersion("1.0")
     .addBearerAuth() 
     .build();

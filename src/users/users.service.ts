@@ -6,14 +6,26 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
+    try {
+      return await this.prisma.user.findUnique({ where: { email } });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findById(id: number) {
-    return this.prisma.user.findUnique({ where: { id } });
+    try {
+      return await this.prisma.user.findUnique({ where: { id } });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async create(data: any) {
-    return this.prisma.user.create({ data });
+    try {
+      return await this.prisma.user.create({ data });
+    } catch (error) {
+      throw error;
+    }
   }
 }
