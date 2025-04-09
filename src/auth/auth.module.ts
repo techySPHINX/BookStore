@@ -8,7 +8,7 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
 
 @Module({
   imports: [
-    UsersModule,
+    UsersModule, 
     PassportModule.register({ defaultStrategy: "jwt" }),
     JwtModule.register({
       secret: "your-secret-key", 
