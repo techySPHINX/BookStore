@@ -49,6 +49,7 @@ This is a NestJS-based backend API for managing a bookstore. It includes feature
 4. Update `.env` with your PostgreSQL connection string:
    ```env
    DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
+   JWT_SECRET = "your_key"
    ```
 
 5. Generate Prisma Client:
