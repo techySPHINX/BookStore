@@ -1,36 +1,35 @@
 import {
- Injectable,
- CanActivate,
- ExecutionContext,
- UnauthorizedException,
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
- constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
 
- canActivate(context: ExecutionContext): boolean {
-  const request = context.switchToHttp().getRequest();
-  const authHeader = request.headers.authorization;
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const token = this.extractTokenFromHeader(request);
 
-  // Check if Auth header is present
-  if (!authHeader) {
-   throw new UnauthorizedException("Authorization header missing");
+    if (!token) {
+      throw new UnauthorizedException("Authorization token missing");
+    }
+
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+      request.user = payload; 
+      return true;
+    } catch (error) {
+      throw new UnauthorizedException("Invalid or expired token");
+    }
   }
 
-  const token = authHeader.split(" ")[1];
-  try {
-   // Verify  token using the JwtService
-   const decoded = this.jwtService.verify(token, {
-    secret: process.env.JWT_SECRET, 
-   });
-
-   // Attach decoded user information to the request object
-   request.user = decoded;
-   return true; 
-  } catch (error) {
-   throw new UnauthorizedException("Invalid or expired token");
+  private extractTokenFromHeader(request): string | undefined {
+    const authHeader = request.headers.authorization || "";
+    const [type, token] = authHeader.split(" ");
+    return type === "Bearer" ? token : undefined;
   }
- }
 }

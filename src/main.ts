@@ -1,21 +1,33 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { setupSwagger } from "./config/swagger.config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Swagger Configuration
-  const config = new DocumentBuilder()
-    .setTitle("Bookstore API")
-    .setDescription("API documentation for the Bookstore application using NestJS")
-    .setVersion("1.0")
-    .addBearerAuth() 
-    .build();
+  const configService = app.get(ConfigService);
+  const port = Number(configService.get("PORT")) || 3000;
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document);
+  setupSwagger(app);
 
-  await app.listen(3000);
+  app.getHttpAdapter().get("/", (req, res) => {
+    res.redirect("/api/docs");
+  });
+
+  app.enableCors();
+
+  await app.listen(port);
+
+  Logger.log(
+    `Application is running on: http://localhost:${port}`,
+    "Bootstrap"
+  );
+  Logger.log(
+    `Swagger API documentation available at: http://localhost:${port}/api/docs`,
+    "Bootstrap"
+  );
 }
+
 bootstrap();
