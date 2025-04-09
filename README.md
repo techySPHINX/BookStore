@@ -1,98 +1,235 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+```markdown
+# Bookstore Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![NestJS](https://img.shields.io/badge/NestJS-14.0.0-red.svg)](https://nestjs.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-6.6.0-blue.svg)](https://prisma.io/)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Overview
 
-## Description
+This is a NestJS-based backend API for managing a bookstore. It includes features for user authentication, book management, customer management, and order management. The API uses Prisma as the ORM for PostgreSQL database interactions and Swagger for API documentation.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Table of Contents
 
-## Project setup
+1. [Getting Started](#getting-started)
+2. [Features](#features)
+3. [API Endpoints](#api-endpoints)
+4. [Project Structure](#project-structure)
+5. [Contributing](#contributing)
+6. [License](#license)
 
+## Getting Started
+
+### Prerequisites
+
+- Node.js (14.x or higher)
+- PostgreSQL (for database)
+- Prisma CLI installed globally:
+  ```bash
+  npm install -g prisma
+  ```
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/bookstore-backend.git
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Initialize Prisma:
+   ```bash
+   npx prisma init
+   ```
+
+4. Update `.env` with your PostgreSQL connection string:
+   ```env
+   DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
+   ```
+
+5. Generate Prisma Client:
+   ```bash
+   npx prisma generate
+   ```
+
+6. Apply database migrations:
+   ```bash
+   npx prisma migrate dev --name init
+   ```
+
+### Running the Application
+
+Start the development server:
 ```bash
-$ yarn install
+npm run start:dev
 ```
 
-## Compile and run the project
+## Features
 
-```bash
-# development
-$ yarn run start
+- **User Authentication**: JWT-based authentication for secure login and registration.
+- **Book Management**: CRUD operations for managing books, including filtering and searching.
+- **Customer Management**: Basic CRUD operations for customer management.
+- **Order Management**: Create, read, and cancel orders with book-order relationships.
+- **Swagger Documentation**: Interactive API documentation using Swagger.
 
-# watch mode
-$ yarn run start:dev
+## API Endpoints
 
-# production mode
-$ yarn run start:prod
+### Authentication
+
+- **POST /auth/login**: Login with email and password.
+  - Request Body:
+    ```json
+    { "email": "string", "password": "string" }
+    ```
+  - Response:
+    ```json
+    { "access_token": "string" }
+    ```
+  Example:
+  ```bash
+  curl -X POST http://localhost:3000/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email": "user@example.com", "password": "password123"}'
+  ```
+
+- **POST /auth/register**: Register a new user.
+  - Request Body:
+    ```json
+    { "email": "string", "password": "string" }
+    ```
+  - Response:
+    ```json
+    { "access_token": "string" }
+    ```
+  Example:
+  ```bash
+  curl -X POST http://localhost:3000/auth/register \
+  -H 'Content-Type: application/json' \
+  -d '{"email": "newuser@example.com", "password": "newpassword123"}'
+  ```
+
+### Books
+
+- **POST /books**: Create a new book.
+  - Request Body:
+    ```json
+    { "title": "string", "author": "string", "category": "string", "price": "number", "rating?": "number", "publishedAt": "Date" }
+    ```
+  - Response: Created book object.
+  Example:
+  ```bash
+  curl -X POST http://localhost:3000/books \
+  -H 'Content-Type: application/json' \
+  -d '{"title": "New Book", "author": "Author Name", "category": "Fiction", "price": 19.99, "publishedAt": "2025-04-09T00:00:00Z"}'
+  ```
+
+- **GET /books**: Retrieve all books.
+  - Response: Array of book objects.
+  Example:
+  ```bash
+  curl http://localhost:3000/books
+  ```
+
+### Customers
+
+- **POST /customers**: Create a new customer.
+  - Request Body:
+    ```json
+    { "userId": "number" }
+    ```
+  - Response: Created customer object.
+  Example:
+  ```bash
+  curl -X POST http://localhost:3000/customers \
+  -H 'Content-Type: application/json' \
+  -d '{"userId": 1}'
+  ```
+
+- **GET /customers**: Retrieve all customers.
+  - Response: Array of customer objects.
+  Example:
+  ```bash
+  curl http://localhost:3000/customers
+  ```
+
+### Orders
+
+- **POST /orders**: Create a new order.
+  - Request Body:
+    ```json
+    { "customerId": "number", "bookIds": ["number[]"] }
+    ```
+  - Response: Created order object.
+  Example:
+  ```bash
+  curl -X POST http://localhost:3000/orders \
+  -H 'Content-Type: application/json' \
+  -d '{"customerId": 1, "bookIds": [1, 2]}'
+  ```
+
+- **GET /orders**: Retrieve all orders.
+  - Response: Array of order objects.
+  Example:
+  ```bash
+  curl http://localhost:3000/orders
+  ```
+
+## Project Structure
+
+```plaintext
+src/
+├── app.controller.ts
+├── app.module.ts
+├── app.service.ts
+├── auth/
+│   ├── auth.controller.ts
+│   ├── auth.module.ts
+│   ├── auth.service.ts
+│   ├── dto/
+│   │   ├── login.dto.ts
+│   │   └── register.dto.ts
+│   ├── guards/
+│   │   └── jwt-auth.guard.ts
+│   └── strategies/
+│       └── jwt.strategy.ts
+├── books/
+│   ├── books.controller.ts
+│   ├── books.module.ts
+│   ├── books.service.ts
+│   └── dto/
+│       ├── create-book.dto.ts
+│       └── update-book.dto.ts
+├── customers/
+│   ├── customers.controller.ts
+│   ├── customers.module.ts
+│   ├── customers.service.ts
+│   └── entities/
+│       └── customer.entity.ts
+├── orders/
+│   ├── orders.controller.ts
+│   ├── orders.module.ts
+│   ├── orders.service.ts
+│   └── dto/
+│       └── create-order.dto.ts
+├── prisma/
+│   ├── prisma.module.ts
+│   └── prisma.service.ts
+├── users/
+│   ├── users.controller.ts
+│   ├── users.module.ts
+│   └── users.service.ts
+└── main.ts
 ```
 
-## Run tests
+## Contributing
 
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Contributions are welcome! Please submit a pull request with a detailed description of changes.
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+```
