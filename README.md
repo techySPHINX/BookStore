@@ -1,4 +1,4 @@
-```markdown
+
 # Bookstore Backend API
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -232,4 +232,4 @@ Contributions are welcome! Please submit a pull request with a detailed descript
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-```
+
